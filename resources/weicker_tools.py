@@ -25,36 +25,30 @@ class WeickerLogic:
         self.journal = {}
         print(self.storage_link)
 
-    def load_all_records(self):
+    def get_all_records(self):
         with open(self.storage_link, 'r', encoding = "utf-8") as file:
-            content = file.read().strip()
-            if content:
-                self.journal = json.load(file)
-            else:
-                self.journal = {}
-
-
-    def show_all_records(self):
-        print(self.journal)
-
-    def get_record(self):
-        pass
+            self.journal = json.load(file)
+    def add_record(self, date, weight):
+        self.get_all_records()
+        self.journal[date] = weight
+        with open(self.storage_link, 'w') as file:
+            json.dump(self.journal, file, indent=4)
 
     def get_window_of_records(self):
-        pass
-
-    def add_record(self):
         pass
 
     def edit_record(self):
         pass
 
+
+
 class WeickerUI:
-    def __init__(self):
+    def __init__(self, logic:WeickerLogic):
+        self.logic = logic
         self.hello_prompt = 'Welcome to the Weicker'
         self.commands_prompt = ('\nWhat do you want to do?\n'
                              '"add" - add weight record\n'
-                             '"show all" - show all records\n'
+                             '"show" - show all records\n'
                              '"edit" - edit record\n'
                              '"show DDMMYY" - show particular record\n'
                              '"exit" - close the Weicker')
@@ -65,7 +59,12 @@ class WeickerUI:
         while True:
             print(self.commands_prompt)
             user_command = input('Enter a command... ')
-            if user_command != 'exit':
-                print('Thanks for the command')
+            if user_command.startswith('show'):
+                self.logic.get_all_records()
+                print(self.logic.journal)
+            elif user_command.startswith('add'):
+                date = user_command[4:7]
+                weight = user_command[8:]
+                self.logic.add_record(date, weight)
             elif user_command.startswith('exit'):
                 break
