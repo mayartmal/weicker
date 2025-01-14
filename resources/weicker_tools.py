@@ -1,22 +1,7 @@
-#function to add weight to journal
 import json
+from datetime import datetime
 
 
-#function to read journal
-
-#function to get one weight record
-
-#function to edit one weight record
-
-
-#class journal
-#initialize from json
-#add weight
-#save record
-#get record
-#edit record
-#read record
-#read set of records
 
 
 class WeickerLogic:
@@ -28,17 +13,27 @@ class WeickerLogic:
     def get_all_records(self):
         with open(self.storage_link, 'r', encoding = "utf-8") as file:
             self.journal = json.load(file)
-    def add_record(self, date, weight):
+    def add_record(self, weight):
+        today_date = datetime.now().strftime("%d%m%Y")
+        self.get_all_records()
+        self.journal[today_date] = weight
+        with open(self.storage_link, 'w') as file:
+            json.dump(self.journal, file, indent=4)
+    def edit_record(self, date, weight):
         self.get_all_records()
         self.journal[date] = weight
+        sorted_journal = dict(sorted(self.journal.items()))
+        self.journal = sorted_journal
         with open(self.storage_link, 'w') as file:
             json.dump(self.journal, file, indent=4)
 
-    def get_window_of_records(self):
-        pass
 
-    def edit_record(self):
-        pass
+
+    # def get_window_of_records(self):
+    #     pass
+    #
+    # def edit_record(self):
+    #     pass
 
 
 
@@ -52,8 +47,10 @@ class WeickerUI:
                              '"edit" - edit record\n'
                              '"show DDMMYY" - show particular record\n'
                              '"exit" - close the Weicker')
-
-
+    def show_all(self):
+        pass
+    def write_weight(self):
+        pass
     def run_ui(self):
         print(self.hello_prompt)
         while True:
@@ -61,10 +58,16 @@ class WeickerUI:
             user_command = input('Enter a command... ')
             if user_command.startswith('show'):
                 self.logic.get_all_records()
-                print(self.logic.journal)
+                for date_id, weight in self.logic.journal.items():
+                    date = datetime.strptime(date_id, "%d%m%Y")
+                    formatted_date = date.strftime("%d.%m.%Y")
+                    print(f"{formatted_date}, {weight} kg")
             elif user_command.startswith('add'):
-                date = user_command[4:7]
-                weight = user_command[8:]
-                self.logic.add_record(date, weight)
+                weight = float(user_command[4:])
+                self.logic.add_record(weight)
+            elif user_command.startswith('edit'):
+                date = user_command[5:15].replace('.', '')
+                weight = float(user_command[16:])
+                self.logic.edit_record(date, weight)
             elif user_command.startswith('exit'):
                 break
