@@ -1,0 +1,46 @@
+{
+    "05012025": {
+        "current_weight": 97.0,
+        "moving_average": null
+    },
+    "06012025": {
+        "current_weight": 97.2,
+        "moving_average": null
+    },
+    "07012025": {
+        "current_weight": 95.6,
+        "moving_average": 96.59999999999998
+    },
+    "08012025": {
+        "current_weight": 96.3,
+        "moving_average": 96.36666666666666
+    },
+    "09012025": {
+        "current_weight": 95.5,
+        "moving_average": 95.79999999999998
+    },
+    "10012025": {
+        "current_weight": 96.4,
+        "moving_average": 96.06666666666666
+    },
+    "11012025": {
+        "current_weight": 97.7,
+        "moving_average": 96.53333333333333
+    },
+    "12012025": {
+        "current_weight": 95.1,
+        "moving_average": 96.39999999999998
+    },
+    "13012025": {
+        "current_weight": 96.1,
+        "moving_average": 96.29999999999998
+    },
+    "14012025": {
+        "current_weight": 95.0,
+        "moving_average": 95.39999999999999
+    },
+    "15012025": {
+        "current_weight": 94.9,
+        "moving_average": 95.33333333333333
+    }
+}

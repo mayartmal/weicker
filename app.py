@@ -1,4 +1,4 @@
-from resources.weicker_tools import WeickerLogic, WeickerUI
+from resources.weicker_tools import WeickerLogic, WeickerConsoleUI
 import json
 
 
@@ -6,7 +6,7 @@ if __name__ == '__main__':
     storage = "data/weight_journal.json"
 
     weicker_logic = WeickerLogic(storage)
-    weicker_ui = WeickerUI(weicker_logic)
+    weicker_ui = WeickerConsoleUI(weicker_logic)
     weicker_logic.get_all_records()
     weicker_ui.run_ui()
     record = {
