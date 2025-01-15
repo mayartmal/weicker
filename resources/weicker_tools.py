@@ -33,22 +33,25 @@ class WeickerLogic:
         weights = list(self.journal.values())
         smooth_window = 3
         smooth_weights = np.convolve(weights, np.ones(smooth_window)/smooth_window, mode='valid').tolist()
+
+        days = np.array(range(len(weights))).reshape(-1, 1)
+        model = LinearRegression()
+        model.fit(days, weights)
+        trend_weights = model.predict(days).tolist()
+
+
+
         for index in range(smooth_window - 1):
             smooth_weights.insert(0, None)
         for iteration, (date_id, weight) in enumerate(self.journal.items(), start=1):
             print(iteration, date_id, weight)
-            self.analytics_journal[date_id] = {"current_weight": weights[iteration-1], "moving_average": smooth_weights[iteration-1]}
+            self.analytics_journal[date_id] = {"current_weight": weights[iteration-1],
+                                               "moving_average": smooth_weights[iteration-1],
+                                               "linear": trend_weights[iteration-1]}
         print(self.analytics_journal)
         with open(self.analytics_storage_link, 'w') as file:
             json.dump(self.analytics_journal, file, indent=4)
 
-
-
-
-
-
-    # def get_window_of_records(self):
-    #     pass
 
 
 class WeickerConsoleUI:
@@ -62,8 +65,6 @@ class WeickerConsoleUI:
                              '"show DDMMYY" - show particular record\n'
                              '"exit" - close the Weicker')
     def show_all(self):
-        pass
-    def write_weight(self):
         pass
     def run_ui(self):
         print(self.hello_prompt)
@@ -88,9 +89,11 @@ class WeickerConsoleUI:
                 date = list(self.logic.analytics_journal.keys())
                 raw_weights = [record["current_weight"] for record in self.logic.analytics_journal.values()]
                 smooth_weights = [record["moving_average"] for record in self.logic.analytics_journal.values()]
+                linear_weights = [record["linear"] for record in self.logic.analytics_journal.values()]
 
-                plt.plot(date, raw_weights, label="Raw weights", linestyle='--')
+                plt.plot(date, raw_weights, label="Raw weights")
                 plt.plot(date, smooth_weights, label="Smooth weights", linestyle='-.')
+                plt.plot(date, linear_weights, label="Linear weights", linestyle='--')
                 plt.xticks(rotation=90)
                 plt.legend()
                 plt.show()
